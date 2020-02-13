@@ -1,13 +1,48 @@
-import { GraphQLSchema, GraphQLObjectType, GraphQLString, GraphQLInt, GraphQLID } from "graphql";
+import { GraphQLSchema,
+    GraphQLObjectType,
+    GraphQLString,
+    GraphQLInt,
+    GraphQLID,
+    GraphQLNonNull,
+    GraphQLList } from "graphql";
+
+    import {listings} from './listings';
 
 const Listing = new GraphQLObjectType({
     name: 'Listing',
     fields: {
-        id : { type: GraphQLID},
-        title: { type: GraphQLString },
-        image: {  type: GraphQLString },
-        address: {  type: GraphQLString },
-        price: { type: GraphQLInt },
-        numOfGuests: { type: GraphQLInt },
-        numOfBeds: { type: GraphQLInt },
-        numOfBaths: { type: G
+        id : { type: GraphQLNonNull(GraphQLID)},
+        title: { type: GraphQLNonNull(GraphQLString) },
+        image: {  type: GraphQLNonNull(GraphQLString) },
+        address: {  type: GraphQLNonNull(GraphQLString) },
+        price: { type: GraphQLNonNull(GraphQLInt) },
+        numOfGuests: { type: GraphQLNonNull(GraphQLInt) },
+        numOfBeds: { type: GraphQLNonNull(GraphQLInt) },
+        numOfBaths: { type: GraphQLNonNull(GraphQLInt) },
+        rating: { type: GraphQLNonNull(GraphQLInt) }
+    }
+});
+
+const query = new GraphQLObjectType({
+  name: "Query",
+  fields: {
+    listings: {
+      type: GraphQLNonNull(GraphQLList(GraphQLNonNull(Listing))),
+      resolve: () => {
+          return listings;
+      }
+    }
+  }
+});
+
+const mutation = new GraphQLObjectType({
+  name: "Mutation",
+  fields: {
+    hello: {
+      type: GraphQLString,
+      resolve: () => "Hello from the Mutation!"
+    }
+  }
+});
+
+export const schema = new GraphQLSchema({ query, mutation });
