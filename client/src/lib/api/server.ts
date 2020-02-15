@@ -1,17 +1,20 @@
-interface Body {
-    query: string
+interface Body<TVariables> {
+  query: string;
+  variables?: TVariables;
 }
 
 export const server = {
-    fetch: async (body: Body) => {
-        const res = await fetch("/api", {
-            method: "POST",
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(body),
-        });
+  fetch: async <TData = any, TVariables = any>(
+    body: Body<TVariables>
+  ) => {
+    const res = await fetch("/api", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(body)
+    });
 
-        return res.json();
-    }
+    return res.json() as Promise<{ data: TData }>;
+  }
 };
